@@ -4,6 +4,7 @@ import argparse
 import pathlib
 
 import platformdirs
+import tree_sitter
 import yaml
 
 from . import subr
@@ -33,8 +34,18 @@ def main():
     repo_dir.mkdir(parents=True, exist_ok=True)
 
     logger.info(f'Clone `{args.repository}` to `{repo_dir}`')
+    clone_dir_name = subr.git.get_repo_name(args.repository)
     subr.git.clone(
         url=subr.git.get_repo_url(args.repository),
         dir=repo_dir,
-        name=subr.git.get_repo_name(args.repository),
+        name=clone_dir_name,
+    )
+
+    build_dir = data_dir / 'build'
+    build_dir.mkdir(parents=True, exist_ok=True)
+
+    logger.info(f'Build tree-sitter module: {str(build_dir / (clone_dir_name + ".so"))}')
+    tree_sitter.Language.build_library(
+        str(build_dir / (clone_dir_name + '.so')),
+        [str(repo_dir / clone_dir_name)]
     )
