@@ -2,6 +2,7 @@ import logging
 import logging.config
 import argparse
 import pathlib
+import shutil
 
 import yaml
 
@@ -43,6 +44,31 @@ def main_update(args: argparse.Namespace):
         subr.git.pull(repo_dir, repository.name)
 
 
+def main_list(args: argparse.Namespace):
+    data_dir = lib.dir.get_data_dir()
+    repo_dir = lib.dir.get_repo_dir(data_dir)
+
+    for repository in repo_dir.iterdir():
+        print(repository.name.replace('__', '/'))
+
+
+def main_remove(args: argparse.Namespace):
+    data_dir = lib.dir.get_data_dir()
+    repo_dir = lib.dir.get_repo_dir(data_dir)
+
+    logger.info(f'Remove repository: {str(repo_dir / args.repository)}')
+    (repo_dir / subr.git.get_repo_name(args.repository)).unlink(missing_ok=True)
+
+
+def main_clean(args: argparse.Namespace):
+    data_dir = lib.dir.get_data_dir()
+    build_dir = lib.dir.get_build_dir(data_dir)
+
+    logger.info(f'Clean build directory: {str(build_dir)}')
+    shutil.rmtree(build_dir)
+    build_dir.mkdir()
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='command')
@@ -53,6 +79,16 @@ def parse_args() -> argparse.Namespace:
 
     parser_update = subparsers.add_parser('update', help='Update tree-sitter module.')
     parser_update.set_defaults(handler=main_update)
+
+    parser_list = subparsers.add_parser('list', help='List tree-sitter module.')
+    parser_list.set_defaults(handler=main_list)
+
+    parser_remove = subparsers.add_parser('remove', help='Remove tree-sitter module.')
+    parser_remove.add_argument('repository', help='Repository specifier in github or git URL.')
+    parser_remove.set_defaults(handler=main_remove)
+
+    parser_clean = subparsers.add_parser('clean', help='Clean build directory.')
+    parser_clean.set_defaults(handler=main_clean)
 
     args = parser.parse_args()
     if not args.command:
