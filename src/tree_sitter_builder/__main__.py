@@ -3,11 +3,11 @@ import logging.config
 import argparse
 import pathlib
 
-import platformdirs
 import tree_sitter
 import yaml
 
 from . import subr
+from . import lib
 
 
 with open(pathlib.Path(__file__).parent / 'logging.conf.yml') as f:
@@ -18,9 +18,9 @@ logger = logging.getLogger(__name__)
 
 
 def main_build(args: argparse.Namespace):
-    data_dir = subr.dir.get_data_dir()
-    repo_dir = subr.dir.get_repo_dir(data_dir)
-    build_dir = subr.dir.get_build_dir(data_dir)
+    data_dir = lib.dir.get_data_dir()
+    repo_dir = lib.dir.get_repo_dir(data_dir)
+    build_dir = lib.dir.get_build_dir(data_dir)
 
     logger.info(f'Clone `{args.repository}` to `{repo_dir}`')
     clone_dir_name = subr.git.get_repo_name(args.repository)
