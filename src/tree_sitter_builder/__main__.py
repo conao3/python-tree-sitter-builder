@@ -54,7 +54,12 @@ def parse_args() -> argparse.Namespace:
     parser_update = subparsers.add_parser('update', help='Update tree-sitter module.')
     parser_update.set_defaults(handler=main_update)
 
-    return parser.parse_args()
+    args = parser.parse_args()
+    if not args.command:
+        parser.print_help()
+        exit(1)
+
+    return args
 
 
 def main():
