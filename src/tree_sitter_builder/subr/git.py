@@ -37,3 +37,7 @@ def clone(url: str, dir: pathlib.Path, name: str):
         return
 
     subprocess.run(['git', 'clone', url, name], cwd=dir, check=True)
+
+
+def pull(dir: pathlib.Path, name: str):
+    subprocess.run(['git', 'pull'], cwd=dir / name, check=True)

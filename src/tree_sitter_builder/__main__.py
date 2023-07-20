@@ -18,11 +18,9 @@ logger = logging.getLogger(__name__)
 
 
 def main_build(args: argparse.Namespace):
-    data_dir = pathlib.Path(platformdirs.user_data_dir('tree-sitter-builder'))
-    data_dir.mkdir(parents=True, exist_ok=True)
-
-    repo_dir = data_dir / 'repos'
-    repo_dir.mkdir(parents=True, exist_ok=True)
+    data_dir = subr.dir.get_data_dir()
+    repo_dir = subr.dir.get_repo_dir(data_dir)
+    build_dir = subr.dir.get_build_dir(data_dir)
 
     logger.info(f'Clone `{args.repository}` to `{repo_dir}`')
     clone_dir_name = subr.git.get_repo_name(args.repository)
@@ -31,9 +29,6 @@ def main_build(args: argparse.Namespace):
         dir=repo_dir,
         name=clone_dir_name,
     )
-
-    build_dir = data_dir / 'build'
-    build_dir.mkdir(parents=True, exist_ok=True)
 
     logger.info(f'Build tree-sitter module: {str(build_dir / (clone_dir_name + ".so"))}')
     tree_sitter.Language.build_library(
