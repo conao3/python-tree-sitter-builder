@@ -36,8 +36,10 @@ def clone(url: str, dir: pathlib.Path, name: str):
     if dir.exists():
         return
 
+    logger.info(f'Clone {url} to {str(dir / name)}')
     subprocess.run(['git', 'clone', url, name], cwd=dir, check=True)
 
 
 def pull(dir: pathlib.Path, name: str):
+    logger.info(f'Pull {str(dir / name)}')
     subprocess.run(['git', 'pull'], cwd=dir / name, check=True)

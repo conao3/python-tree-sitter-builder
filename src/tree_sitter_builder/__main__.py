@@ -3,7 +3,6 @@ import logging.config
 import argparse
 import pathlib
 
-import tree_sitter
 import yaml
 
 from . import subr
@@ -23,7 +22,6 @@ def main_build(args: argparse.Namespace):
     build_dir = lib.dir.get_build_dir(data_dir)
 
     if args.repository:
-        logger.info(f'Clone `{args.repository}` to `{repo_dir}`')
         clone_dir_name = subr.git.get_repo_name(args.repository)
         subr.git.clone(
             url=subr.git.get_repo_url(args.repository),
@@ -34,12 +32,15 @@ def main_build(args: argparse.Namespace):
         return
 
     for repository in repo_dir.iterdir():
-        logger.info(f'Build {repository.name}')
         lib.main.build(repository.name, repo_dir, build_dir)
 
 
 def main_update(args: argparse.Namespace):
-    pass
+    data_dir = lib.dir.get_data_dir()
+    repo_dir = lib.dir.get_repo_dir(data_dir)
+
+    for repository in repo_dir.iterdir():
+        subr.git.pull(repo_dir, repository.name)
 
 
 def parse_args() -> argparse.Namespace:
