@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_repo_url(repository: str) -> str:
-    if ':' in repository:
+    if '://' in repository:
         return repository
 
     return f'https://github.com/{repository}.git'
