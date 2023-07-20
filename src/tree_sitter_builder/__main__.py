@@ -17,16 +17,7 @@ with open(pathlib.Path(__file__).parent / 'logging.conf.yml') as f:
 logger = logging.getLogger(__name__)
 
 
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser()
-    parser.add_argument('repository', help='Repository specifier in github or git URL.')
-
-    return parser.parse_args()
-
-
-def main():
-    args = parse_args()
-
+def main_build(args: argparse.Namespace):
     data_dir = pathlib.Path(platformdirs.user_data_dir('tree-sitter-builder'))
     data_dir.mkdir(parents=True, exist_ok=True)
 
@@ -49,3 +40,26 @@ def main():
         str(build_dir / (clone_dir_name + '.so')),
         [str(repo_dir / clone_dir_name)]
     )
+
+
+def main_update(args: argparse.Namespace):
+    pass
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers(dest='command')
+
+    parser_build = subparsers.add_parser('build', help='Build tree-sitter module.')
+    parser_build.add_argument('repository', help='Repository specifier in github or git URL.')
+    parser_build.set_defaults(handler=main_build)
+
+    parser_update = subparsers.add_parser('update', help='Update tree-sitter module.')
+    parser_update.set_defaults(handler=main_update)
+
+    return parser.parse_args()
+
+
+def main():
+    args = parse_args()
+    args.handler(args)
