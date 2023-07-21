@@ -23,6 +23,15 @@ Clone into `$XDG_DATA_HOME/tree-sitter-builder/repos/*`.
 
 If you omit the repository name, tree-sitter-builder will build all repositories.
 
+### dist
+
+Returns the path to builded parser shared object.
+
+```bash
+$ python-tree-sitter-builder % tree-sitter-builder dist conao3/tree-sitter-sql
+/Users/conao/Library/Application Support/tree-sitter-builder/build/conao3__tree-sitter-sql.so
+```
+
 ### update
 
 Update all repositories.
