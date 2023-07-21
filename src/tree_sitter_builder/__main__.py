@@ -36,6 +36,18 @@ def main_build(args: argparse.Namespace):
         lib.main.build(repository.name, repo_dir, build_dir)
 
 
+def main_dist(args: argparse.Namespace):
+    data_dir = lib.dir.get_data_dir()
+    build_dir = lib.dir.get_build_dir(data_dir)
+    clone_dir_name = subr.git.get_repo_name(args.repository)
+    target_file = build_dir / (clone_dir_name + ".so")
+
+    if not target_file.exists():
+        raise FileNotFoundError(f'File not found: {str(target_file)}')
+
+    print(str(target_file))
+
+
 def main_update(args: argparse.Namespace):
     data_dir = lib.dir.get_data_dir()
     repo_dir = lib.dir.get_repo_dir(data_dir)
@@ -76,6 +88,10 @@ def parse_args() -> argparse.Namespace:
     parser_build = subparsers.add_parser('build', help='Build tree-sitter module.')
     parser_build.add_argument('repository', help='Repository specifier in github or git URL.', nargs='?')
     parser_build.set_defaults(handler=main_build)
+
+    parser_build = subparsers.add_parser('dist', help='Show path of tree-sitter module.')
+    parser_build.add_argument('repository', help='Repository specifier in github or git URL.', nargs='?')
+    parser_build.set_defaults(handler=main_dist)
 
     parser_update = subparsers.add_parser('update', help='Update tree-sitter module.')
     parser_update.set_defaults(handler=main_update)
