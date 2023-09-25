@@ -2,9 +2,10 @@
 
 ## Install
 
+Recommend: [pipx](https://pypa.github.io/pipx/)
+
 ```bash
-poetry install
-ln -s $(poetry run which tree-sitter-builder) ~/.local/bin/
+pipx install tree-sitter-builder
 ```
 
 ## Usage
