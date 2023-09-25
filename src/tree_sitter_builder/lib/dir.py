@@ -1,10 +1,8 @@
 import pathlib
 
-import platformdirs
-
 
 def get_data_dir() -> pathlib.Path:
-    data_dir = pathlib.Path(platformdirs.user_data_dir('tree-sitter-builder'))
+    data_dir = pathlib.Path.home() / '.cache' / 'tree-sitter-builder'
     data_dir.mkdir(parents=True, exist_ok=True)
 
     return data_dir
