@@ -11,7 +11,7 @@ tree-sitter-builder = "tree_sitter_builder.__main__:main"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-tree-sitter = "^0.21.3"
+tree-sitter = ">=0.21.3,<0.27.0"
 pyyaml = "^6.0.3"
 setuptools = "^84.2.1"
 
