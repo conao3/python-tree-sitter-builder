@@ -33,7 +33,7 @@ def get_repo_name(repository: str) -> str:
 
 
 def clone(url: str, dir: pathlib.Path, name: str):
-    if dir.exists():
+    if (dir / name).exists():
         return
 
     logger.info(f'Clone {url} to {str(dir / name)}')
